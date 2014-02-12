@@ -42,6 +42,9 @@ public class ${entity.name}ServiceMapper extends AbstractServiceMapper {
 	}
 
 	public ${entity.name} map${entity.name}EntityTo${entity.name}(${entity.name}Entity ${tools.uncapitalize(${entity.name})}Entity) {
+		if(${tools.uncapitalize(${entity.name})}Entity == null) {
+			return null;
+		}
 		${entity.name} ${tools.uncapitalize(${entity.name})} = map(${tools.uncapitalize(${entity.name})}Entity, ${entity.name}.class);
 #foreach( $link in $entity.selectedLinks )
 #set( $fieldsMappingForLink = $tools.fieldsMappingForLink( $entity, $model.getEntityByClassName($link.targetEntityType), $link, $fieldsLink ) )
@@ -57,6 +60,9 @@ public class ${entity.name}ServiceMapper extends AbstractServiceMapper {
 	}
 	
 	public void map${entity.name}To${entity.name}Entity(${entity.name} ${tools.uncapitalize(${entity.name})}, ${entity.name}Entity ${tools.uncapitalize(${entity.name})}Entity) {
+		if(${tools.uncapitalize(${entity.name})} == null) {
+			return null;
+		}
 		map(${tools.uncapitalize(${entity.name})}, ${tools.uncapitalize(${entity.name})}Entity);
 #foreach( $link in $entity.selectedLinks )
 #set( $fieldsMappingForLink = $tools.fieldsMappingForLink( $entity, $model.getEntityByClassName($link.targetEntityType), $link, $fieldsLink ) )
