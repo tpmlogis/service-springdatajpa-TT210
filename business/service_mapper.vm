@@ -61,7 +61,7 @@ public class ${entity.name}ServiceMapper extends AbstractServiceMapper {
 	
 	public void map${entity.name}To${entity.name}Entity(${entity.name} ${tools.uncapitalize(${entity.name})}, ${entity.name}Entity ${tools.uncapitalize(${entity.name})}Entity) {
 		if(${tools.uncapitalize(${entity.name})} == null) {
-			return null;
+			return;
 		}
 		map(${tools.uncapitalize(${entity.name})}, ${tools.uncapitalize(${entity.name})}Entity);
 #foreach( $link in $entity.selectedLinks )
