@@ -1,7 +1,7 @@
 #if( $entity.hasCompositePrimaryKey() )
 #set( $entityKeyType = ${entity.name} + "EntityKey" )
 #else
-#set( $entityKeyType = ${entity.keyAttributes[0].formatedType(0)} )
+#set( $entityKeyType = ${entity.keyAttributes[0].formattedType(0)} )
 #end
 ##--------------------------------------------------------------------------------------------------------
 /*
