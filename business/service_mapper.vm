@@ -1,4 +1,4 @@
-#set( $tools = $loader.newInstance("Tools") )
+## #set( $tools = $loader.newInstance("Tools") )
 ##--------------------------------------------------------------------------------------------------------
 ## Link fields = fields not in Primary Key and used as FK in selected Links    
 #set( $fieldsLink = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_SELECTED_LINKS ) )
@@ -10,16 +10,14 @@
 package ${target.javaPackageFromFolder(${SRC})};
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 import ${ENTITY_PKG}.${entity.name};
-#foreach( $link in $entity.selectedLinks )
-import ${ENTITY_PKG}.${link.targetEntitySimpleType};
-#end
 import ${ENTITY_PKG}.jpa.${entity.name}Entity;
 #foreach( $link in $entity.selectedLinks )
+#if( ( $link.isCardinalityOneToOne() || $link.isCardinalityManyToOne() ) && $link.isOwningSide() && $link.hasAttributeInPrimaryKey() == false )
 import ${ENTITY_PKG}.jpa.${link.targetEntitySimpleType}Entity;
+#end
 #end
 
 /**
@@ -41,43 +39,96 @@ public class ${entity.name}ServiceMapper extends AbstractServiceMapper {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 	}
 
-	public ${entity.name} map${entity.name}EntityTo${entity.name}(${entity.name}Entity ${fn.uncapitalize(${entity.name})}Entity) {
-		if(${fn.uncapitalize(${entity.name})}Entity == null) {
+#set($uncapitalizedName = $fn.uncapitalize(${entity.name}) )
+	/**
+	 * Mapping from '${entity.name}Entity' to '${entity.name}'
+	 * @param ${uncapitalizedName}Entity
+	 */
+	public ${entity.name} map${entity.name}EntityTo${entity.name}(${entity.name}Entity ${uncapitalizedName}Entity) {
+		if(${uncapitalizedName}Entity == null) {
 			return null;
 		}
-		${entity.name} ${fn.uncapitalize(${entity.name})} = map(${fn.uncapitalize(${entity.name})}Entity, ${entity.name}.class);
-#foreach( $link in $entity.selectedLinks )
-#set( $fieldsMappingForLink = $tools.fieldsMappingForLink( $entity, $model.getEntityByClassName($link.targetEntitySimpleType), $link, $fieldsLink ) )
-#foreach( $fieldMappingForLink in $fieldsMappingForLink.entrySet() )
 
-		if(${fn.uncapitalize(${entity.name})}Entity.${link.getter}() != null) {
-			${fn.uncapitalize(${entity.name})}.${fieldMappingForLink.key.setter}(${fn.uncapitalize(${entity.name})}Entity.${link.getter}().${fieldMappingForLink.value.getter}());
+		//--- Generic mapping 
+		${entity.name} ${uncapitalizedName} = map(${uncapitalizedName}Entity, ${entity.name}.class);
+
+#foreach( $link in $entity.selectedLinks )
+#if( ( $link.isCardinalityOneToOne() || $link.isCardinalityManyToOne() ) && $link.isOwningSide() && $link.hasAttributeInPrimaryKey() == false )
+		//--- Link mapping ( link to $link.targetEntitySimpleType )
+		if(${uncapitalizedName}Entity.${link.getter}() != null) {
+#foreach( $linkAttribute in $link.attributes )
+#set($originAttribSetter = "${uncapitalizedName}.${linkAttribute.originAttribute.setter}" )
+#set($targetAttribGetter = "${uncapitalizedName}Entity.${link.getter}().${linkAttribute.targetAttribute.getter}()" )
+			${originAttribSetter}($targetAttribGetter);
+#end
 		}
 #end
 #end
-
 		return ${fn.uncapitalize(${entity.name})};
 	}
 	
-	public void map${entity.name}To${entity.name}Entity(${entity.name} ${fn.uncapitalize(${entity.name})}, ${entity.name}Entity ${fn.uncapitalize(${entity.name})}Entity) {
-		if(${fn.uncapitalize(${entity.name})} == null) {
+	/**
+	 * Mapping from '${entity.name}' to '${entity.name}Entity'
+	 * @param $uncapitalizedName
+	 * @param ${uncapitalizedName}Entity
+	 */
+	public void map${entity.name}To${entity.name}Entity(${entity.name} ${uncapitalizedName}, ${entity.name}Entity ${uncapitalizedName}Entity) {
+		if(${uncapitalizedName} == null) {
 			return;
 		}
-		map(${fn.uncapitalize(${entity.name})}, ${fn.uncapitalize(${entity.name})}Entity);
-#foreach( $link in $entity.selectedLinks )
-#set( $fieldsMappingForLink = $tools.fieldsMappingForLink( $entity, $model.getEntityByClassName($link.targetEntitySimpleType), $link, $fieldsLink ) )
-#foreach( $fieldMappingForLink in $fieldsMappingForLink.entrySet() )
 
-		if(${fn.uncapitalize(${entity.name})}.${fieldMappingForLink.key.getter}() == null) {
-			${fn.uncapitalize(${entity.name})}Entity.${link.setter}(null);
+		//--- Generic mapping 
+		map(${uncapitalizedName}, ${uncapitalizedName}Entity);
+
+#set($count = 0 )
+#foreach( $link in $entity.selectedLinks )
+#if( ( $link.isCardinalityOneToOne() || $link.isCardinalityManyToOne() ) && $link.isOwningSide() && $link.hasAttributeInPrimaryKey() == false )
+#set($count = $count + 1 )
+#set($var = "$fn.uncapitalize(${link.targetEntitySimpleType})${count}" )
+		//--- Link mapping ( link : ${uncapitalizedName} )
+		if( isValidLinkTo${link.targetEntitySimpleType}(${uncapitalizedName}) ) {
+			${link.targetEntitySimpleType}Entity ${var} = new ${link.targetEntitySimpleType}Entity();
+#foreach( $linkAttribute in $link.attributes )
+			${var}.${linkAttribute.targetAttribute.setter}( ${uncapitalizedName}.${linkAttribute.originAttribute.getter}() );
+#end
+			${uncapitalizedName}Entity.${link.setter}( ${var} );
 		} else {
-			${fn.uncapitalize(${entity.name})}Entity.${link.setter}(new ${link.targetEntitySimpleType}Entity());
-			${fn.uncapitalize(${entity.name})}Entity.${link.getter}().${fieldMappingForLink.value.setter}(${fn.uncapitalize(${entity.name})}.${fieldMappingForLink.key.getter}());
+			${uncapitalizedName}Entity.${link.setter}( null );
 		}
+
 #end
 #end
 	}
 	
+#foreach( $link in $entity.selectedLinks )
+#if( ( $link.isCardinalityOneToOne() || $link.isCardinalityManyToOne() ) && $link.isOwningSide() && $link.hasAttributeInPrimaryKey() == false )
+	/**
+	 * Verify that ${link.targetEntitySimpleType} id is valid.
+	 * @param ${link.targetEntitySimpleType} ${link.targetEntitySimpleType}
+	 * @return boolean
+	 */
+	private boolean isValidLinkTo${link.targetEntitySimpleType}(${entity.name} ${uncapitalizedName}) {
+		boolean isValid = true;
+		
+#foreach( $linkAttribute in $link.attributes )
+#if( ${linkAttribute.targetAttribute.isPrimitiveType()} )
+		//--- ${linkAttribute.targetAttribute.formattedName(0)} : primitive type (never null)
+#else
+#if( ${linkAttribute.originAttribute.isNotNull()} )
+		if(${uncapitalizedName}.${linkAttribute.originAttribute.getter}() == null) {
+			return false;
+		}
+#else
+		//--- ${linkAttribute.targetAttribute.formattedName(0)} : can be null
+#end
+#end
+#end
+		
+		return isValid;
+	}
+
+#end
+#end
 	/**
 	 * {@inheritDoc}
 	 */

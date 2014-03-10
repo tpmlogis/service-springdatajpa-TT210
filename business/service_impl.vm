@@ -37,91 +37,91 @@ import org.springframework.transaction.annotation.Transactional;
 public class ${entity.name}ServiceImpl implements ${entity.name}Service {
 
 	@Resource
-	private ${entity.name}JpaRepository ${entity.name.toLowerCase()}JpaRepository;
+	private ${entity.name}JpaRepository ${fn.uncapitalize($entity.name)}JpaRepository;
 
 	@Resource
-	private ${entity.name}ServiceMapper ${entity.name.toLowerCase()}ServiceMapper;
+	private ${entity.name}ServiceMapper ${fn.uncapitalize($entity.name)}ServiceMapper;
 	
 	@Override
 	public ${entity.name} findById(${fn.argumentsListWithType($entity.keyAttributes)}) {
 #if( $entity.hasCompositePrimaryKey() )
 		${entityKeyType} id = new ${entityKeyType}(${fn.argumentsList($entity.keyAttributes)});
-		${entity.name}Entity ${entity.name.toLowerCase()}Entity = ${entity.name.toLowerCase()}JpaRepository.findOne(id);
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}Entity = ${fn.uncapitalize($entity.name)}JpaRepository.findOne(id);
 #else
-		${entity.name}Entity ${entity.name.toLowerCase()}Entity = ${entity.name.toLowerCase()}JpaRepository.findOne(${fn.argumentsList($entity.keyAttributes)});
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}Entity = ${fn.uncapitalize($entity.name)}JpaRepository.findOne(${fn.argumentsList($entity.keyAttributes)});
 #end
-		return ${entity.name.toLowerCase()}ServiceMapper.map${entity.name}EntityTo${entity.name}(${entity.name.toLowerCase()}Entity);
+		return ${fn.uncapitalize($entity.name)}ServiceMapper.map${entity.name}EntityTo${entity.name}(${fn.uncapitalize($entity.name)}Entity);
 	}
 
 	@Override
 	public List<${entity.name}> findAll() {
-		Iterable<${entity.name}Entity> entities = ${entity.name.toLowerCase()}JpaRepository.findAll();
+		Iterable<${entity.name}Entity> entities = ${fn.uncapitalize($entity.name)}JpaRepository.findAll();
 		List<${entity.name}> beans = new ArrayList<${entity.name}>();
-		for(${entity.name}Entity ${entity.name.toLowerCase()}Entity : entities) {
-			beans.add(${entity.name.toLowerCase()}ServiceMapper.map${entity.name}EntityTo${entity.name}(${entity.name.toLowerCase()}Entity));
+		for(${entity.name}Entity ${fn.uncapitalize($entity.name)}Entity : entities) {
+			beans.add(${fn.uncapitalize($entity.name)}ServiceMapper.map${entity.name}EntityTo${entity.name}(${fn.uncapitalize($entity.name)}Entity));
 		}
 		return beans;
 	}
 
 	@Override
-	public ${entity.name} save(${entity.name} ${entity.name.toLowerCase()}) {
-		return update(${entity.name.toLowerCase()}) ;
+	public ${entity.name} save(${entity.name} ${fn.uncapitalize($entity.name)}) {
+		return update(${fn.uncapitalize($entity.name)}) ;
 	}
 
 	@Override
-	public ${entity.name} create(${entity.name} ${entity.name.toLowerCase()}) {
+	public ${entity.name} create(${entity.name} ${fn.uncapitalize($entity.name)}) {
 #if( $entity.hasCompositePrimaryKey() )
-		${entityKeyType} id = new ${entityKeyType}(${fn.argumentsListWithGetter($entity.name.toLowerCase(),$entity.keyAttributes)});
-		${entity.name}Entity ${entity.name.toLowerCase()}Entity = ${entity.name.toLowerCase()}JpaRepository.findOne(id);
+		${entityKeyType} id = new ${entityKeyType}(${fn.argumentsListWithGetter($fn.uncapitalize($entity.name),$entity.keyAttributes)});
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}Entity = ${fn.uncapitalize($entity.name)}JpaRepository.findOne(id);
 #else
-		${entity.name}Entity ${entity.name.toLowerCase()}Entity = ${entity.name.toLowerCase()}JpaRepository.findOne(${fn.argumentsListWithGetter($entity.name.toLowerCase(),$entity.keyAttributes)});
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}Entity = ${fn.uncapitalize($entity.name)}JpaRepository.findOne(${fn.argumentsListWithGetter($fn.uncapitalize($entity.name),$entity.keyAttributes)});
 #end
-		if( ${entity.name.toLowerCase()}Entity != null ) {
+		if( ${fn.uncapitalize($entity.name)}Entity != null ) {
 			throw new IllegalStateException("already.exists");
 		}
-		${entity.name.toLowerCase()}Entity = new ${entity.name}Entity();
-		${entity.name.toLowerCase()}ServiceMapper.map${entity.name}To${entity.name}Entity(${entity.name.toLowerCase()}, ${entity.name.toLowerCase()}Entity);
-		${entity.name}Entity ${entity.name.toLowerCase()}EntitySaved = ${entity.name.toLowerCase()}JpaRepository.save(${entity.name.toLowerCase()}Entity);
-		return ${entity.name.toLowerCase()}ServiceMapper.map${entity.name}EntityTo${entity.name}(${entity.name.toLowerCase()}EntitySaved);
+		${fn.uncapitalize($entity.name)}Entity = new ${entity.name}Entity();
+		${fn.uncapitalize($entity.name)}ServiceMapper.map${entity.name}To${entity.name}Entity(${fn.uncapitalize($entity.name)}, ${fn.uncapitalize($entity.name)}Entity);
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}EntitySaved = ${fn.uncapitalize($entity.name)}JpaRepository.save(${fn.uncapitalize($entity.name)}Entity);
+		return ${fn.uncapitalize($entity.name)}ServiceMapper.map${entity.name}EntityTo${entity.name}(${fn.uncapitalize($entity.name)}EntitySaved);
 	}
 
 	@Override
-	public ${entity.name} update(${entity.name} ${entity.name.toLowerCase()}) {
+	public ${entity.name} update(${entity.name} ${fn.uncapitalize($entity.name)}) {
 #if( $entity.hasCompositePrimaryKey() )
-		${entityKeyType} id = new ${entityKeyType}(${fn.argumentsListWithGetter($entity.name.toLowerCase(),$entity.keyAttributes)});
-		${entity.name}Entity ${entity.name.toLowerCase()}Entity = ${entity.name.toLowerCase()}JpaRepository.findOne(id);
+		${entityKeyType} id = new ${entityKeyType}(${fn.argumentsListWithGetter($fn.uncapitalize($entity.name),$entity.keyAttributes)});
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}Entity = ${fn.uncapitalize($entity.name)}JpaRepository.findOne(id);
 #else
-		${entity.name}Entity ${entity.name.toLowerCase()}Entity = ${entity.name.toLowerCase()}JpaRepository.findOne(${fn.argumentsListWithGetter($entity.name.toLowerCase(),$entity.keyAttributes)});
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}Entity = ${fn.uncapitalize($entity.name)}JpaRepository.findOne(${fn.argumentsListWithGetter($fn.uncapitalize($entity.name),$entity.keyAttributes)});
 #end
-		${entity.name.toLowerCase()}ServiceMapper.map${entity.name}To${entity.name}Entity(${entity.name.toLowerCase()}, ${entity.name.toLowerCase()}Entity);
-		${entity.name}Entity ${entity.name.toLowerCase()}EntitySaved = ${entity.name.toLowerCase()}JpaRepository.save(${entity.name.toLowerCase()}Entity);
-		return ${entity.name.toLowerCase()}ServiceMapper.map${entity.name}EntityTo${entity.name}(${entity.name.toLowerCase()}EntitySaved);
+		${fn.uncapitalize($entity.name)}ServiceMapper.map${entity.name}To${entity.name}Entity(${fn.uncapitalize($entity.name)}, ${fn.uncapitalize($entity.name)}Entity);
+		${entity.name}Entity ${fn.uncapitalize($entity.name)}EntitySaved = ${fn.uncapitalize($entity.name)}JpaRepository.save(${fn.uncapitalize($entity.name)}Entity);
+		return ${fn.uncapitalize($entity.name)}ServiceMapper.map${entity.name}EntityTo${entity.name}(${fn.uncapitalize($entity.name)}EntitySaved);
 	}
 
 	@Override
 	public void delete(${fn.argumentsListWithType($entity.keyAttributes)}) {
 #if( $entity.hasCompositePrimaryKey() )
 		${entityKeyType} id = new ${entityKeyType}(${fn.argumentsList($entity.keyAttributes)});
-		${entity.name.toLowerCase()}JpaRepository.delete(id);
+		${fn.uncapitalize($entity.name)}JpaRepository.delete(id);
 #else
-		${entity.name.toLowerCase()}JpaRepository.delete(${fn.argumentsList($entity.keyAttributes)});
+		${fn.uncapitalize($entity.name)}JpaRepository.delete(${fn.argumentsList($entity.keyAttributes)});
 #end
 	}
 
 	public ${entity.name}JpaRepository get${entity.name}JpaRepository() {
-		return ${entity.name.toLowerCase()}JpaRepository;
+		return ${fn.uncapitalize($entity.name)}JpaRepository;
 	}
 
-	public void set${entity.name}JpaRepository(${entity.name}JpaRepository ${entity.name.toLowerCase()}JpaRepository) {
-		this.${entity.name.toLowerCase()}JpaRepository = ${entity.name.toLowerCase()}JpaRepository;
+	public void set${entity.name}JpaRepository(${entity.name}JpaRepository ${fn.uncapitalize($entity.name)}JpaRepository) {
+		this.${fn.uncapitalize($entity.name)}JpaRepository = ${fn.uncapitalize($entity.name)}JpaRepository;
 	}
 
 	public ${entity.name}ServiceMapper get${entity.name}ServiceMapper() {
-		return ${entity.name.toLowerCase()}ServiceMapper;
+		return ${fn.uncapitalize($entity.name)}ServiceMapper;
 	}
 
-	public void set${entity.name}ServiceMapper(${entity.name}ServiceMapper ${entity.name.toLowerCase()}ServiceMapper) {
-		this.${entity.name.toLowerCase()}ServiceMapper = ${entity.name.toLowerCase()}ServiceMapper;
+	public void set${entity.name}ServiceMapper(${entity.name}ServiceMapper ${fn.uncapitalize($entity.name)}ServiceMapper) {
+		this.${fn.uncapitalize($entity.name)}ServiceMapper = ${fn.uncapitalize($entity.name)}ServiceMapper;
 	}
 
 }
