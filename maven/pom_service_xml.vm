@@ -4,153 +4,24 @@
 	<groupId>$fn.get("MAVEN_GROUP_ID","to.be.defined")</groupId>
 	<artifactId>$fn.get("MAVEN_ARTIFACT_ID","to.be.defined")</artifactId>
 	<version>$fn.get("PROJECT_VERSION","to.be.defined")</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- VERSIONS -->
-		<java.version>1.6</java.version> 
-		<spring.version>3.2.6.RELEASE</spring.version>
-		<junit.version>4.11</junit.version>
-		<slf4j.version>1.7.5</slf4j.version>
-	</properties>
-	
 	<dependencies>
 
 		<!-- Add the JDBC driver here -->
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
-		</dependency>
+		<!-- Insert contents of : pom_dependencies_common.txt -->
 
-		<!-- Spring -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${DOLLAR}{spring.version}</version>
-		</dependency>
-		
-		<!-- Bean validation -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>4.3.1.Final</version> 
-		</dependency>
-	
-		<!-- SLF4J Simple implementation : sends log messages to the console -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId> 
-			<version>1.7.5</version>
-		</dependency>
+		<!-- Insert contents of : pom_dependencies_service.txt -->
 
-		<!-- data -->
-		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-			<version>${DOLLAR}{spring.version}</version>
-        </dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>${DOLLAR}{spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
-			<version>1.2.0.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.4</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId> <!-- javax.persistence.* -->
-			<version>1.0.1.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId> <!-- org.hibernate.ejb.* -->
-			<version>4.2.2.Final</version>
-		</dependency>
+		<!-- Insert contents of : pom_dependencies_persistence.txt -->
 
-		<!-- Logging : SLF4J is used by Hibernate -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${DOLLAR}{slf4j.version}</version>
-		</dependency>
-		<!-- SLF4J Simple implementation : sends log messages to the console -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId> 
-			<version>${DOLLAR}{slf4j.version}</version>
-		</dependency>
-		<!--  SLF4J NOP (no operation) implementation
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-nop</artifactId>
-			<version>${DOLLAR}{slf4j.version}</version>
-		</dependency>
-		-->
-
-		<!-- Dependencies for Unit Testing -->
-  		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit-dep</artifactId>
-			<version>${DOLLAR}{junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${DOLLAR}{junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-		    <version>1.9.5</version>
-		    <scope>test</scope>
-		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>2.2.8</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<version>2.4.9</version>
-			<scope>test</scope>
-		</dependency>
-		 -->
-
-        <dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>0.6.2</version>
-		</dependency>
-				
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
-		</dependency>
-				
 	</dependencies>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.6</java.version>
+	</properties>
 
 	<build>
 		<plugins>
