@@ -1,5 +1,3 @@
-## #set( $tools = $loader.newInstance("Tools") )
-##--------------------------------------------------------------------------------------------------------
 ## Link fields = fields not in Primary Key and used as FK in selected Links    
 #set( $fieldsLink = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_SELECTED_LINKS ) )
 ##--------------------------------------------------------------------------------------------------------
@@ -135,6 +133,10 @@ public class ${entity.name}ServiceMapper extends AbstractServiceMapper {
 	@Override
 	protected ModelMapper getModelMapper() {
 		return modelMapper;
+	}
+
+	protected void setModelMapper(ModelMapper modelMapper) {
+		this.modelMapper = modelMapper;
 	}
 
 }
