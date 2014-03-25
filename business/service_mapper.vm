@@ -84,7 +84,7 @@ public class ${entity.name}ServiceMapper extends AbstractServiceMapper {
 #set($count = $count + 1 )
 #set($var = "$fn.uncapitalize(${link.targetEntitySimpleType})${count}" )
 		//--- Link mapping ( link : ${uncapitalizedName} )
-		if( isValidLinkTo${link.targetEntitySimpleType}(${uncapitalizedName}) ) {
+		if( hasLinkTo${link.targetEntitySimpleType}(${uncapitalizedName}) ) {
 			${link.targetEntitySimpleType}Entity ${var} = new ${link.targetEntitySimpleType}Entity();
 #foreach( $linkAttribute in $link.attributes )
 			${var}.${linkAttribute.targetAttribute.setter}( ${uncapitalizedName}.${linkAttribute.originAttribute.getter}() );
@@ -105,24 +105,24 @@ public class ${entity.name}ServiceMapper extends AbstractServiceMapper {
 	 * @param ${link.targetEntitySimpleType} ${link.targetEntitySimpleType}
 	 * @return boolean
 	 */
-	private boolean isValidLinkTo${link.targetEntitySimpleType}(${entity.name} ${uncapitalizedName}) {
-		boolean isValid = true;
-		
+	private boolean hasLinkTo${link.targetEntitySimpleType}(${entity.name} ${uncapitalizedName}) {
+#set( $containsPrimitiveType = false )
 #foreach( $linkAttribute in $link.attributes )
 #if( ${linkAttribute.targetAttribute.isPrimitiveType()} )
-		//--- ${linkAttribute.targetAttribute.formattedName(0)} : primitive type (never null)
+#set( $containsPrimitiveType = true )
+#end
+#end
+#if( $containsPrimitiveType )
+		// contains at least one primitive type (can not be null)
+		return true;
 #else
-#if( ${linkAttribute.originAttribute.isNotNull()} )
-		if(${uncapitalizedName}.${linkAttribute.originAttribute.getter}() == null) {
-			return false;
+#foreach( $linkAttribute in $link.attributes )
+		if(${uncapitalizedName}.${linkAttribute.originAttribute.getter}() != null) {
+			return true;
 		}
-#else
-		//--- ${linkAttribute.targetAttribute.formattedName(0)} : can be null
 #end
+		return false;
 #end
-#end
-		
-		return isValid;
 	}
 
 #end
