@@ -12,9 +12,9 @@
 
 		<!-- Insert contents of : pom_dependencies_common.txt -->
 
-		<!-- Insert contents of : pom_dependencies_persistence.txt -->
-
 		<!-- Insert contents of : pom_dependencies_service.txt -->
+
+		<!-- Insert contents of : pom_dependencies_persistence.txt -->
 
 	</dependencies>
 
